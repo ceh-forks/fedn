@@ -7,7 +7,7 @@ This guide serves as reference deployment for setting up a FEDn network consisti
    -  One host/VM for the combiner 
       
 .. note:: 
-   In this guide we will deploy using the provived docker-compose templates. Please note that additional configurations would be needed for a production-grade network.    
+   In this guide we will deploy using the provided docker-compose templates. Please note that additional configurations would be needed for a production-grade network.    
 
 Prerequisites 
 -------------
@@ -91,5 +91,5 @@ You can now choose an example, upload a compute package and an initial model, an
 - `Examples <https://github.com/scaleoutsystems/fedn/tree/master/examples>`__
 
 .. note:: 
-   The clients will also need to be able to resolve each combiner node usign the 'host' argument in the combiner settings file. 
+   The clients will also need to be able to resolve each combiner node using the 'host' argument in the combiner settings file. 
    There is a template in 'config/extra-hosts-client.yaml.template' that can be modified for this purpose. 

@@ -19,7 +19,7 @@ When a client connects to the network, it downloads and unpacks the package loca
 participate in training and/or validation. 
 
 The logic is illustrated in the above figure. When the `FEDn client <https://github.com/scaleoutsystems/fedn/blob/master/fedn/fedn/client.py>`_.  
-recieves a model update request from the combiner, it calls upon a Dispatcher that looks up entry point definitions 
+receives a model update request from the combiner, it calls upon a Dispatcher that looks up entry point definitions 
 in the compute package. These entrypoints define commands executed by the client to update/train or validate a model.
 
 Designing the compute package
@@ -130,17 +130,17 @@ A typical *train.py* example can look like this:
         
 
 
-The format of the input and output files (model updates) are dependent on the ML framework used. A `helper class <https://github.com/scaleoutsystems/fedn/blob/master/fedn/fedn/utils/kerashelper.py>`_. 
-defines serializaion and de-serialization of the model updates.
+The format of the input and output files (model updates) are dependent on the ML framework used. A `helper class <https://github.com/scaleoutsystems/fedn/blob/master/fedn/fedn/utils/kerashelper.py>`_ 
+defines serialization and de-serialization of the model updates.
 Observe that the functions `create_seed_model <https://github.com/scaleoutsystems/examples/blob/b5876dc42e91b694488351b5dbff0cef3329b7dc/mnist-keras/client/models/mnist_model.py#L13>`_ 
 and `read_data <https://github.com/scaleoutsystems/examples/blob/b5876dc42e91b694488351b5dbff0cef3329b7dc/mnist-keras/client/data/read_data.py#L4>`_ are implemented by the user, where the first function 
-constructs (compiles) and returns an untrained (seed) model. We then take this model and set the weights to be equal to the current global model recieved
-from the commbiner. In the example above we use the Keras helper class to de-serialize those weights and the keras funcion *model.set_weights()* to set the seed model to be equal to the current model. 
+constructs (compiles) and returns an untrained (seed) model. We then take this model and set the weights to be equal to the current global model received
+from the combiner. In the example above we use the Keras helper class to de-serialize those weights and the Keras function *model.set_weights()* to set the seed model to be equal to the current model. 
 We then call the *train* function to first read the training data
 (obs. the location of the data can differ depending on if you run the client in a native or containerized environment, in the latter case it's recommend to mount the data to the container, 
 the location should then be relative to the mount path) and then start the training.
-In this example, training equals fitting the keras model, thus we call *model.fit()* fucntion. 
-The *settings.yaml* is for conveniance and is not required but contains the hyper-parameter settings for the local training as key/value pairs.    
+In this example, training equals fitting the Keras model, thus we call *model.fit()* function. 
+The *settings.yaml* is for convenience and is not required but contains the hyper-parameter settings for the local training as key/value pairs.    
 
 For validations it is a requirement that the output is valid json: 
 
@@ -148,7 +148,7 @@ For validations it is a requirement that the output is valid json:
 
    python validate.py model_in validation.json
  
-The Dahboard in the FEDn UI will plot any scalar metric in this json file, but you can include any type in the file assuming that it is valid json. These values can then be obtained (by an athorized user) from the MongoDB database (via Mongo Express, or any query interface or API). Typically, the actual model is defined in a small library, and does not depend on FEDn. An example (based on the keras case) of the *validate.py* is povided below:
+The Dashboard in the FEDn UI will plot any scalar metric in this json file, but you can include any type in the file assuming that it is valid json. These values can then be obtained (by an authorized user) from the MongoDB database (via Mongo Express, or any query interface or API). Typically, the actual model is defined in a small library, and does not depend on FEDn. An example (based on the Keras case) of the *validate.py* is provided below:
 
 .. code-block:: python
 
@@ -229,7 +229,7 @@ The Dahboard in the FEDn UI will plot any scalar metric in this json file, but y
         with open(sys.argv[2],"w") as fh:
             fh.write(json.dumps(report))
 
-As demonstrated in the code above, the structure is very similar to *train.py*. The main difference is that we perform validation of a current model provided by the combiner instead of training. Again, the *read_data* function is defined by the user. Once, we have optained a validation
+As demonstrated in the code above, the structure is very similar to *train.py*. The main difference is that we perform validation of a current model provided by the combiner instead of training. Again, the *read_data* function is defined by the user. Once, we have obtained a validation
 *report* as a dictionary we can dump as json (required). Observe that the key/values are arbitrary.
 
 For the initialization of the Reducer, both the compute package and an initial model (weights) are required as individual files. To obtain the initial weights file we can use the fedn helpers to save the seed model to an output file (*init_model.py*):
@@ -261,10 +261,10 @@ More on Data access
 -------------------
 
 There are many possible ways to interact with the local dataset. In principle, the only requirement is that the train and validate endpoints are able to correctly 
-read and use the data. In practice, it is then necessary to make some assumption on the local environemnt when writing train.py and validate.py. This is best explained 
+read and use the data. In practice, it is then necessary to make some assumption on the local environment when writing train.py and validate.py. This is best explained 
 by looking at the code above. Here we assume that the dataset is present in a file called "your_data.file" in a folder "data" one level up in the file hierarchy relative to 
-the exection of train.py. Then, independent on the preferred way to run the client (native, Docker, K8s etc) this structure needs to be maintained for this particular 
-compute package. Note however, that there are many ways to accompish this on a local operational level.
+the execution of train.py. Then, independent on the preferred way to run the client (native, Docker, K8s etc) this structure needs to be maintained for this particular 
+compute package. Note however, that there are many ways to accomplish this on a local operational level.
 
 Running the client
 ------------------
